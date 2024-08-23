@@ -1,11 +1,33 @@
-import axios from "axios";
+const axios = require("axios");
 
 class MnvAdsClient {
-    constructor(publisherKey, adsId, initUri, enrichUri) {
-        this.publisherKey = publisherKey;
-        this.adsId = adsId;
-        this.initUri = initUri;
-        this.enrichUri = enrichUri;
+    constructor({ publisherKey, adsId, initUri, enrichUri }) {
+        this.publisherKey = this.validateProperty("publisherKey", publisherKey);
+        this.adsId = this.validateProperty("adsId", adsId);
+        this.initUri = this.validateProperty("initUri", initUri);
+        this.enrichUri = this.validateProperty("enrichUri", enrichUri);
+    }
+
+    validateProperty(propertyName, propertyValue) {
+        if (!propertyValue || typeof propertyValue !== "string") {
+            throw new Error(
+                `"${propertyName}" is required and must be a string`,
+            );
+        }
+        return propertyValue;
+    }
+
+    validateUriProperty(propertyName, propertyValue) {
+        if (!propertyValue || typeof propertyValue !== "string") {
+            throw new Error(
+                `"${propertyName}" is required and must be a string`,
+            );
+        }
+
+        if (!propertyValue.startsWith("http")) {
+            throw new Error(`"${propertyName}" must be a valid URI`);
+        }
+        return propertyValue;
     }
 
     async init() {
@@ -20,12 +42,12 @@ class MnvAdsClient {
         }
     }
 
-    async enrich(referenceId) {
+    async enrich(referenceNo) {
         try {
             const response = await axios.post(this.enrichUri, {
                 publisher_key: this.publisherKey,
                 ads_id: this.adsId,
-                reference_id: referenceId,
+                reference_no: referenceNo,
             });
             return response.data;
         } catch (error) {
@@ -35,13 +57,13 @@ class MnvAdsClient {
 
     async verify() {
         const initResponse = await this.init();
-        if (initResponse.error) {
+        if (initResponse.error || initResponse.code !== "SUCCESS") {
             return initResponse;
         }
-        const referenceId = initResponse.reference_id;
-        const enrichResponse = await this.enrich(referenceId);
+        const referenceNo = initResponse.data.reference_no;
+        const enrichResponse = await this.enrich(referenceNo);
         return enrichResponse;
     }
 }
 
-export default MnvAdsClient;
+module.exports = MnvAdsClient;
