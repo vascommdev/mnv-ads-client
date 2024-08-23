@@ -70,7 +70,7 @@ class MnvAdsClient {
             );
             return response.data;
         } catch (error) {
-            return error;
+            return error.response.data || error;
         }
     }
 
@@ -87,7 +87,7 @@ class MnvAdsClient {
             );
             return response.data;
         } catch (error) {
-            return error;
+            return error.response.data || error;
         }
     }
 
