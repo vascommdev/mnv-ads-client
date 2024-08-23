@@ -17,15 +17,15 @@ npm install mnv-ads-client
 In your JavaScript file, import the `MNV Ads Client` class:
 
 ```javascript
-import MnvAdsClient from "mnv-ads-client";
+import mnvAdsClient from "mnv-ads-client";
 ```
 
 ## Creating an instance of the library
 
-Create an instance of the AdLibrary class, passing your publisherKey and adsId as arguments:
+Create an instance of the MnvAdsClient class, passing your publisherKey and adsId as arguments:
 
 ```javascript
-const adLibrary = new AdLibrary(
+const mnvAdsClient = new MnvAdsClient(
     "YOUR_PUBLISHER_KEY",
     "YOUR_ADS_ID",
     "MNV ADS INIT URI",
@@ -44,7 +44,7 @@ The MNV Ads Client instance has three methods: init, enrich, and initAndEnrich.
 Makes a POST request to https://{{mnv-ads-uri}}/webhook/init with the publisherKey and adsId as payload.
 
 ```javascript
-adLibrary
+mnvAdsClient
     .init()
     .then((response) => {
         console.log(response); // response from https://{{mnv-ads-uri}}/webhook/init
@@ -60,7 +60,7 @@ Makes a POST request to https://{{mnv-ads-uri}}/webhook/enrich with the publishe
 
 ```javascript
 const referenceId = "REFERENCE_ID_FROM_INIT_RESPONSE";
-adLibrary
+mnvAdsClient
     .enrich(referenceId)
     .then((response) => {
         console.log(response); // response from https://{{mnv-ads-uri}}/webhook/enrich
@@ -75,7 +75,7 @@ adLibrary
 Calls init and then enrich sequentially.
 
 ```javascript
-adLibrary
+mnvAdsClient
     .verify()
     .then((response) => {
         console.log(response); // response from https://{{mnv-ads-uri}}/webhook/enrich
@@ -87,11 +87,11 @@ adLibrary
 
 ## Dependencies
 
-The ad-library library depends on axios for making HTTP requests.
+The mnv-ads-client library depends on axios for making HTTP requests.
 
 ## License
 
-The ad-library library is licensed under the MIT License.
+The mnv-ads-client library is licensed under the MIT License.
 
 ## Contributing
 
