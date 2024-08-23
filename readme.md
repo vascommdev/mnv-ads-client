@@ -70,13 +70,13 @@ adLibrary
     });
 ```
 
-## verivy method
+## verify method
 
 Calls init and then enrich sequentially.
 
 ```javascript
 adLibrary
-    .initAndEnrich()
+    .verify()
     .then((response) => {
         console.log(response); // response from https://{{mnv-ads-uri}}/webhook/enrich
     })
