@@ -1,11 +1,26 @@
 const axios = require("axios");
 
 class MnvAdsClient {
-    constructor({ publisherKey, adsId, initUri, enrichUri }) {
+    constructor({
+        publisherKey,
+        adsId,
+        initUri,
+        enrichUri,
+        initTImeout = 5000,
+        enrichTimeout = 5000,
+    } = {}) {
         this.publisherKey = this.validateProperty("publisherKey", publisherKey);
         this.adsId = this.validateProperty("adsId", adsId);
-        this.initUri = this.validateProperty("initUri", initUri);
-        this.enrichUri = this.validateProperty("enrichUri", enrichUri);
+        this.initUri = this.validateUriProperty("initUri", initUri);
+        this.enrichUri = this.validateUriProperty("enrichUri", enrichUri);
+        this.initTImeout = this.validateNumberProperty(
+            "initTImeout",
+            initTImeout,
+        );
+        this.enrichTimeout = this.validateNumberProperty(
+            "enrichTimeout",
+            enrichTimeout,
+        );
     }
 
     validateProperty(propertyName, propertyValue) {
@@ -30,28 +45,49 @@ class MnvAdsClient {
         return propertyValue;
     }
 
+    validateNumberProperty(propertyName, propertyValue) {
+        if (
+            !propertyValue ||
+            typeof propertyValue !== "number" ||
+            propertyValue <= 0
+        ) {
+            throw new Error(
+                `"${propertyName}" is required and must be a number greater than 0`,
+            );
+        }
+        return propertyValue;
+    }
+
     async init() {
         try {
-            const response = await axios.post(this.initUri, {
-                publisher_key: this.publisherKey,
-                ads_id: this.adsId,
-            });
+            const response = await axios.post(
+                this.initUri,
+                {
+                    publisher_key: this.publisherKey,
+                    ads_id: this.adsId,
+                },
+                { timeout: this.initTImeout },
+            );
             return response.data;
         } catch (error) {
-            return error.response.data;
+            return error;
         }
     }
 
     async enrich(referenceNo) {
         try {
-            const response = await axios.post(this.enrichUri, {
-                publisher_key: this.publisherKey,
-                ads_id: this.adsId,
-                reference_no: referenceNo,
-            });
+            const response = await axios.post(
+                this.enrichUri,
+                {
+                    publisher_key: this.publisherKey,
+                    ads_id: this.adsId,
+                    reference_no: referenceNo,
+                },
+                { timeout: this.enrichTimeout },
+            );
             return response.data;
         } catch (error) {
-            return error.response.data;
+            return error;
         }
     }
 

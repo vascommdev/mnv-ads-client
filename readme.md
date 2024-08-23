@@ -25,15 +25,19 @@ import mnvAdsClient from "mnv-ads-client";
 Create an instance of the MnvAdsClient class, passing your publisherKey and adsId as arguments:
 
 ```javascript
-const mnvAdsClient = new MnvAdsClient(
-    "YOUR_PUBLISHER_KEY",
-    "YOUR_ADS_ID",
-    "MNV ADS INIT URI",
-    "MNV ADS ENRICH URI",
-);
+const mnvAdsClient = new MnvAdsClient({
+    publisherKey: "YOUR_PUBLISHER_KEY", //STRING, REQUIRED
+    adsId: "YOUR_ADS_ID", // STRING, REQUIRED
+    initUri: "MNV ADS INIT URI", // STRING, REQUIRED
+    enrichUri: "MNV ADS ENRICH URI", // STRING, REQUIRED,
+    initTimeout: 5000, // NUMBER, OPTIONAL
+    enrichTimeout: 5000, // NUMBER, OPTIONAL
+});
 ```
 
 Replace YOUR_PUBLISHER_KEY and YOUR_ADS_ID with your actual publisher key and ads ID.
+Replace MNVA ADS INIT URI and MNV ADS ENRICH URI with information about these URI's from administator
+Optionally, you can set request timeout for init and enrich request timeout using number in millisecond. The default timeout for both of them are 5000 milliseconds (5 seconds)
 
 ## Using the library methods
 
